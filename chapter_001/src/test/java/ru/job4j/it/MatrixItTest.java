@@ -19,10 +19,12 @@ public class MatrixItTest {
     @Test
     public void whenFirstEmptyThenNext() {
         int[][] in = {
-                {}, {1}
+                {}, {1, 5}
         };
         MatrixIt it = new MatrixIt(in);
         assertThat(it.next(), is(1));
+        assertThat(it.next(), is(5));
+        assertThat(it.hasNext(), is(false));
     }
 
     @Test

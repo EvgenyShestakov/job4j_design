@@ -1,7 +1,5 @@
 package ru.job4j.it;
 
-import org.w3c.dom.ls.LSOutput;
-
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -16,14 +14,10 @@ public class MatrixIt implements Iterator<Integer> {
 
     @Override
     public boolean hasNext() {
-
-
         while (data[row].length == 0 && row <  data.length - 1) {
                 row++;
-
         }
-        System.out.println(row);
-        return row < data.length && data[data.length - 1].length != 0;
+        return data[row].length != 0 && column != data[row].length;
     }
 
     @Override
@@ -31,26 +25,11 @@ public class MatrixIt implements Iterator<Integer> {
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
-        if (column == data[row].length) {
+        int x = data[row][column++];
+        if (column == data[row].length && row < data.length - 1) {
             column = 0;
             row++;
         }
-        return data[row][column++];
+        return x;
     }
-
-    public static void main(String[] args) {
-        /*int[][] in = {
-                {1}, {}, {}, {}, {2}
-        };
-        MatrixIt it = new MatrixIt(in);
-        System.out.println(it.next());
-        System.out.println(it.next());
-        */int[][] in1 = {
-                {7}, {}, {}, {}, {}
-        };
-        MatrixIt it1 = new MatrixIt(in1);
-        System.out.println(it1.next());
-        System.out.println(it1.hasNext());
-    }
-
 }
