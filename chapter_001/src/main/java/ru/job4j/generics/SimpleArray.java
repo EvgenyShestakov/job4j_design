@@ -16,19 +16,19 @@ public class SimpleArray<T> implements Iterable<T> {
     }
 
     public void set(int index, T model) {
-        int index1 = Objects.checkIndex(index, arrays.length);
+        int index1 = Objects.checkIndex(index, size);
         arrays[index1] = model;
     }
 
     public void remove(int index) {
-        int index1 = Objects.checkIndex(index, arrays.length);
+        int index1 = Objects.checkIndex(index, size);
         System.arraycopy(arrays, index1 + 1, arrays, index1, size - index1 - 1);
         arrays[size - 1] = null;
         size--;
     }
 
     public T get(int index) {
-        int index1 = Objects.checkIndex(index, arrays.length);
+        int index1 = Objects.checkIndex(index, size);
         return (T) arrays[index1];
     }
     @Override
@@ -41,7 +41,7 @@ public class SimpleArray<T> implements Iterable<T> {
 
         @Override
         public boolean hasNext() {
-            return point < arrays.length;
+            return point < size;
         }
 
         @Override
