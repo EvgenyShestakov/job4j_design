@@ -13,27 +13,19 @@ public class SimpleArray<T> implements Iterable<T> {
     public void add(T model) {
         if (size == arrays.length) {
             arrays = grow();
-            arrays[size++] = model;
-        } else {
-            arrays[size++] = model;
         }
+        arrays[size++] = model;
         modCount++;
     }
 
     public T get(int index) {
         int index1 = Objects.checkIndex(index, size);
-        modCount++;
         return (T) arrays[index1];
     }
 
     public void set(int index, T model) {
         int index1 = Objects.checkIndex(index, size);
-        if (size == arrays.length) {
-            arrays = grow();
-            arrayCopySet(index1, model);
-        } else {
-            arrayCopySet(index1, model);
-        }
+        arrays[index1] = model;
         modCount++;
     }
 
@@ -49,12 +41,6 @@ public class SimpleArray<T> implements Iterable<T> {
         Object[] newArrays = new Object[this.arrays.length * 2];
         System.arraycopy(arrays, 0, newArrays, 0, arrays.length);
         return newArrays;
-    }
-
-    private void arrayCopySet(int index1, T model) {
-        System.arraycopy(arrays, index1, arrays, index1 + 1, size - index1);
-        arrays[index1] = model;
-        size++;
     }
 
     @Override
