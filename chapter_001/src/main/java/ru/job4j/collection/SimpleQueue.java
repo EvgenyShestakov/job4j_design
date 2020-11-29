@@ -25,12 +25,4 @@ public class SimpleQueue<T> {
     public void push(T value) {
         in.push(value);
     }
-
-    public static void main(String[] args) {
-        SimpleQueue<Integer> queue = new SimpleQueue<>();
-        queue.push(1);
-        System.out.println();
-        int rsl = queue.poll();
-        System.out.println(rsl);
-    }
 }
