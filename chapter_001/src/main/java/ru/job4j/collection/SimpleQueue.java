@@ -9,11 +9,11 @@ public class SimpleQueue<T> {
         while (true) {
             if (t == null) {
                 out.push(in.pop());
-                if (in.getSize() == 0) {
+                if (in.isEmpty()) {
                     t = out.pop();
                 }
             } else {
-                if (out.getSize() == 0) {
+                if (out.isEmpty()) {
                     break;
                 }
                 in.push(out.pop());
