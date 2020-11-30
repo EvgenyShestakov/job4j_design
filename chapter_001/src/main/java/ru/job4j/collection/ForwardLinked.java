@@ -52,13 +52,18 @@ public class ForwardLinked<T> implements Iterable<T> {
         return  t;
     }
     public void revert() {
-        int count = size;
-        Node<T> tail = new Node<>(deleteLast(), null);
-        while (size > 0) {
-            tail.next = new Node<>(deleteLast(), null);
+        if (head == null) {
+            throw new NoSuchElementException();
         }
-        head = tail;
-        size = count;
+        Node<T> previousNode = null;
+        Node<T> nextNode = head.next;
+        while (nextNode != null) {
+            head.next = previousNode;
+            previousNode = head;
+            head = nextNode;
+            nextNode = nextNode.next;
+        }
+        head.next = previousNode;
     }
 
     @Override
