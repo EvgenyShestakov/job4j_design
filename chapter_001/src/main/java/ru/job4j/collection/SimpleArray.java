@@ -43,6 +43,10 @@ public class SimpleArray<T> implements Iterable<T> {
         return newArrays;
     }
 
+    public Object[] getArrays() {
+        return arrays;
+    }
+
     @Override
     public Iterator<T> iterator() {
         return new SimpleArrayIterator();
