@@ -14,8 +14,7 @@ public class SimpleSet<T> implements Iterable<T> {
 
     private boolean contains(T model) {
         boolean flag = false;
-        Object[] objects = simpleArray.getArrays();
-        for (Object element : objects) {
+        for (Object element : simpleArray) {
             if (Objects.equals(element, model)) {
                 flag = true;
             }
