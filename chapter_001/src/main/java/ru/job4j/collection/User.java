@@ -5,7 +5,6 @@ import java.util.*;
 public class User {
     private String name;
     private int children;
-
     private Calendar birthday;
 
     public User(String name, int children, Calendar birthday) {
@@ -39,13 +38,11 @@ public class User {
         User user2 = new User("Наташа", 2, new GregorianCalendar(1995, Calendar.
                 APRIL, 23));
         map.put(user1, new MedicalCard(5));
-        map.put(user2, new MedicalCard(5));
+        map.put(user2, new MedicalCard(7));
         for (Map.Entry<User, Object> pair : map.entrySet()) {
             User key = pair.getKey();
             Object value = pair.getValue();
             System.out.println(key + ":" + value);
         }
-
-
     }
 }
