@@ -5,7 +5,8 @@ import java.util.*;
 public class SimpleHashMap<K, V> implements Iterable {
     private Object[] arrays = new Object[1000];
     private int size = 0;
-    private float threshold = arrays.length / 5.0f;
+    private final float LOAD_FACTOR = 0.75f;;
+    private float threshold = arrays.length * LOAD_FACTOR;
     private int modCount = 0;
 
     public boolean insert(K key, V value) {
@@ -27,9 +28,11 @@ public class SimpleHashMap<K, V> implements Iterable {
         V value = null;
         int hash = hash(key);
         Node<K, V> node = (Node<K, V>) arrays[hash];
-        if (key.hashCode() == node.key.hashCode()) {
-            if (key.equals(node.key)) {
-                value = node.value;
+        if (key != null && node.key != null) {
+            if (key.hashCode() == node.key.hashCode()) {
+                if (Objects.equals(key, node.key)) {
+                    value = node.value;
+                }
             }
         }
         return value;
@@ -39,14 +42,16 @@ public class SimpleHashMap<K, V> implements Iterable {
         boolean flag = false;
         int hash = hash(key);
         Node<K, V> node = (Node<K, V>) arrays[hash];
-        if (key.hashCode() == node.key.hashCode()) {
-            if (key.equals(node.key)) {
-                arrays[hash] = null;
-                flag = true;
+        if (key != null && node.key != null) {
+            if (key.hashCode() == node.key.hashCode()) {
+                if (Objects.equals(key, node.key)) {
+                    arrays[hash] = null;
+                    flag = true;
+                    size--;
+                    modCount++;
+                }
             }
         }
-        size--;
-        modCount++;
         return  flag;
     }
 
@@ -56,7 +61,7 @@ public class SimpleHashMap<K, V> implements Iterable {
 
     private Object[] grow() {
         Object[] newArrays = new Object[arrays.length * 2];
-        threshold = newArrays.length / 5.0f;
+        threshold = newArrays.length * LOAD_FACTOR;
         int newSize = 0;
         for (int i = 0; i < arrays.length; i++) {
             if (arrays[i] != null) {
@@ -76,6 +81,7 @@ public class SimpleHashMap<K, V> implements Iterable {
     public Iterator iterator() {
         return new SimpleHashMapIterator();
     }
+
 
     static class Node<K, V> {
         private K key;
