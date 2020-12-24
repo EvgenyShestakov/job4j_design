@@ -13,19 +13,10 @@ public class Tree<E> implements SimpleTree<E> {
     public boolean add(E parent, E child) {
         boolean rsl = false;
         Optional<Node<E>> optional = findBy(parent);
-        if (optional.isPresent()) {
+        if (optional.isPresent() && !findBy(child).isPresent()) {
             Node<E> node = optional.get();
-            int count = 0;
-            for (Node<E> elem : node.children) {
-                if (elem.value.equals(child)) {
-                    count++;
-                    break;
-                }
-            }
-            if (count == 0) {
-                node.children.add(new Node<>(child));
-                rsl = true;
-            }
+            node.children.add(new Node<>(child));
+            rsl = true;
         }
         return rsl;
     }
