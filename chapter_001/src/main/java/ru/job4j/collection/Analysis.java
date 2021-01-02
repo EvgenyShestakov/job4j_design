@@ -4,43 +4,23 @@ import java.util.*;
 
 public class Analysis {
     public Info diff(List<User> previous, List<User> current) {
-        int add = 0;
         int chan = 0;
         int del = 0;
-        for (int i = 0; i < current.size(); i++) {
-            User cur = current.get(i);
-            boolean flag = true;
-            if (!previous.contains(cur)) {
-                for (int j = 0; j < previous.size(); j++) {
-                    User prev = previous.get(j);
-                    if (cur.id == prev.id && (!Objects.equals(cur.name, prev.name))) {
-                        chan++;
-                        flag = false;
-                        break;
-                    }
-                }
-                if (flag) {
-                    add++;
-                }
+        Map<Integer, User> map = new HashMap<>();
+        for (User user : current) {
+            map.put(user.id, user);
+        }
+        for (User user : previous) {
+            if (map.containsValue(user)) {
+                map.remove(user.id);
+            } else if (map.containsKey(user.id) && !map.containsValue(user)) {
+                chan++;
+                map.remove(user.id);
+            } else {
+                del++;
             }
         }
-        for (int i = 0; i < previous.size(); i++) {
-            User prev = previous.get(i);
-            boolean flag = true;
-            if (!current.contains(prev)) {
-                for (int j = 0; j < current.size(); j++) {
-                    User cur = current.get(j);
-                    if (cur.id == prev.id && (!Objects.equals(cur.name, prev.name))) {
-                        flag = false;
-                        break;
-                    }
-                }
-                if (flag) {
-                    del++;
-                }
-            }
-        }
-        return new Info(add, chan, del);
+        return new Info(map.size(), chan, del);
     }
 
     public static class User {
