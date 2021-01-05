@@ -11,13 +11,11 @@ public class Analysis {
             map.put(user.id, user);
         }
         for (User user : previous) {
-            if (map.containsValue(user)) {
-                map.remove(user.id);
-            } else if (map.containsKey(user.id) && !map.containsValue(user)) {
-                chan++;
-                map.remove(user.id);
-            } else {
+            User user1 = map.remove(user.id);
+            if (user1 == null) {
                 del++;
+            } else if (user.id == user1.id && !Objects.equals(user, user1)) {
+                chan++;
             }
         }
         return new Info(map.size(), chan, del);
