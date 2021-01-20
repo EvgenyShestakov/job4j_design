@@ -3,34 +3,57 @@ package ru.job4j.exam;
 import java.util.*;
 
 public class Mail {
-    public Map<String, Set<String>> merge(Map<String, Set<String>> map) {
-        Map<String, Set<String>> rsl = new HashMap<>();
-        Map<String, Set<String>> tmp = new HashMap<>(map);
-        for (Map.Entry<String, Set<String>> pair : map.entrySet()) {
-            Set<String> value = new HashSet<>(pair.getValue());
-            String key = pair.getKey();
-            if (tmp.containsKey(key)) {
-                for (Map.Entry<String, Set<String>> pair2 : map.entrySet()) {
-                    Set<String> value2 = pair2.getValue();
-                    String key2 = pair2.getKey();
-                    if (!key.equals(key2) && value.removeAll(value2)) {
-                        value.addAll(value2);
-                        tmp.remove(key2);
+    public List<User> merge(List<User> users) {
+        Map<String, User> aux = new HashMap<>();
+        Map<User, Set<String>> main = new HashMap<>();
+        List<User> list = new ArrayList<>();
+        for (User user : users) {
+            User current = user;
+            Set<String> mails = current.getMails();
+            for (String mail : mails) {
+                if (!aux.containsKey(mail)) {
+                    aux.put(mail, current);
+                } else {
+                    current = aux.get(mail);
+                    Set<String> oldMails = current.getMails();
+                    oldMails.addAll(mails);
+                    for (String mail1 : oldMails) {
+                        aux.put(mail1, current);
                     }
+                    break;
                 }
-                rsl.put(key, value);
             }
+            main.put(current, current.getMails());
         }
-        return rsl;
+        for (var key: main.keySet()) {
+            list.add(new User(key.getName(), main.get(key)));
+        }
+        return list;
     }
 
     public static class User {
-        private int id;
         private String name;
+        private Set<String> mails;
 
-        public User(int id, String name) {
-            this.id = id;
+        public User(String name, Set<String> mail) {
             this.name = name;
+            this.mails = mail;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public Set<String> getMails() {
+            return mails;
+        }
+
+        @Override
+        public String toString() {
+            return "User{"
+                    + "name='" + name + '\''
+                    + ", mail=" + mails
+                    + '}';
         }
 
         @Override
@@ -42,13 +65,12 @@ public class Mail {
                 return false;
             }
             User user = (User) o;
-            return id == user.id
-                    && Objects.equals(name, user.name);
+            return Objects.equals(getName(), user.getName());
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(id, name);
+            return Objects.hash(getName());
         }
     }
 }
