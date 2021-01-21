@@ -20,7 +20,6 @@ public class Mail {
                     for (String mail1 : oldMails) {
                         aux.put(mail1, current);
                     }
-                    break;
                 }
             }
             main.put(current, current.getMails());

@@ -5,35 +5,32 @@ import java.util.Map;
 
 public class FreezeStr {
     public static boolean eq(String left, String right) {
-        Map<Character, Integer> map = new HashMap();
+        Map<Character, Integer> map = new HashMap<>();
         boolean rsl = true;
         if (left.length() != right.length()) {
             rsl = false;
         } else {
             for (Character character : left.toCharArray()) {
-                if (!map.containsKey(character)) {
-                    map.put(character, 1);
+                map.put(character, map.getOrDefault(character, 0) + 1);
+            }
+        }
+        for (Character character : right.toCharArray()) {
+            if (!map.containsKey(character)) {
+                rsl = false;
+                break;
+            } else {
+                int value = map.get(character) - 1;
+                if (value == 0) {
+                    map.remove(character);
                 } else {
-                    map.computeIfPresent(character, (character1, integer) -> integer + 1);
+                    map.put(character, value);
                 }
             }
-            for (Character character : right.toCharArray()) {
-                if (!map.containsKey(character)) {
-                    rsl = false;
-                    break;
-                } else {
-                    map.computeIfPresent(character, (character1, integer) -> integer - 1);
-                }
-            }
-            if (rsl) {
-                for (Character character : map.keySet()) {
-                    if (map.get(character) != 0) {
-                        rsl = false;
-                        break;
-                    }
-                }
-            }
+        }
+        if (rsl) {
+            rsl = map.isEmpty();
         }
         return rsl;
     }
 }
+
