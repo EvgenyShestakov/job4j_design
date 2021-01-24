@@ -9,8 +9,7 @@ public class LogFilter {
     public static List<String> filter(String file) {
         List<String> lines = new ArrayList<>();
         try (BufferedReader in = new BufferedReader(new FileReader(file))) {
-            in.lines().forEach(lines::add);
-            lines.removeIf(line -> line.lastIndexOf("404") == -1);
+            in.lines().filter(s -> s.lastIndexOf("404") != -1).forEach(lines::add);
         } catch (Exception e) {
             e.printStackTrace();
         }
