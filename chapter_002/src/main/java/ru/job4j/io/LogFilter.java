@@ -27,8 +27,10 @@ public class LogFilter {
     }
 
     public static void main(String[] args) {
-        List<String> log = filter("log.txt");
-        save(log, "result.txt");
+        List<String> log = filter("C:/projects/job4j_design/chapter_002/src/main/"
+                + "java/ru/job4j/io/resources/log.txt");
+        save(log, "C:/projects/job4j_design/chapter_002/src/main//java/ru/job4j/"
+                + "io/resources/result.txt");
         log.forEach(System.out::println);
     }
 }

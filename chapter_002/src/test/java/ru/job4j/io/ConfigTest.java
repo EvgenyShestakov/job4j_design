@@ -7,7 +7,8 @@ import static org.junit.Assert.assertThat;
 public class ConfigTest {
     @Test
     public void whenPairWithoutComment() {
-        Config config = new Config("app.properties");
+        Config config = new Config("C:/projects/job4j_design/chapter_002/src/main/"
+                + "java/ru/job4j/io/resources/app.properties.txt");
         config.load();
         assertThat(
                 config.value("hibernate.connection.url"),
