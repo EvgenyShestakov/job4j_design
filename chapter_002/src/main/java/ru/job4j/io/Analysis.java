@@ -33,7 +33,7 @@ public class Analysis {
         }
     }
 
-    public List<String> write(String file) {
+    public List<String> download(String file) {
         List<String> list = new ArrayList<>();
         try (BufferedReader in = new BufferedReader(new FileReader(file))) {
             in.lines().forEach(list::add);
@@ -41,6 +41,19 @@ public class Analysis {
             e.printStackTrace();
         }
         return list;
+    }
+
+    public void write(String file) {
+        try (PrintWriter out = new PrintWriter(file)) {
+            out.println("200 10:56:01");
+            out.println("500 10:57:01");
+            out.println("400 10:58:01");
+            out.println("200 10:59:01");
+            out.println("500 11:01:02");
+            out.println("200 11:02:02");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {
