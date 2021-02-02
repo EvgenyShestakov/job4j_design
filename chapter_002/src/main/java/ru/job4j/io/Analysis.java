@@ -3,7 +3,6 @@ package ru.job4j.io;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringJoiner;
 
 public class Analysis {
     public void unavailable(String source, String target) {
@@ -13,7 +12,6 @@ public class Analysis {
             boolean flag = true;
             String start = null;
             String finish = null;
-            StringJoiner stringJoiner = new StringJoiner(System.lineSeparator());
             while ((line = in.readLine()) != null) {
                 if ((line.startsWith("400") || line.startsWith("500")) && flag) {
                     flag = false;
@@ -23,11 +21,10 @@ public class Analysis {
                     finish = start + line.substring(4) + ";";
                 }
                 if (finish != null) {
-                    stringJoiner.add(finish);
+                    out.write(finish + System.lineSeparator());
                     finish = null;
                 }
             }
-            out.write(stringJoiner.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
