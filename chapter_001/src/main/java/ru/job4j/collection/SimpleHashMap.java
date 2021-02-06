@@ -5,8 +5,8 @@ import java.util.*;
 public class SimpleHashMap<K, V> implements Iterable {
     private Object[] arrays = new Object[1000];
     private int size = 0;
-    private final float LOAD_FACTOR = 0.75f;;
-    private float threshold = arrays.length * LOAD_FACTOR;
+    private final float loadFactor = 0.75f;;
+    private float threshold = arrays.length * loadFactor;
     private int modCount = 0;
 
     public boolean insert(K key, V value) {
@@ -61,7 +61,7 @@ public class SimpleHashMap<K, V> implements Iterable {
 
     private Object[] grow() {
         Object[] newArrays = new Object[arrays.length * 2];
-        threshold = newArrays.length * LOAD_FACTOR;
+        threshold = newArrays.length * loadFactor;
         int newSize = 0;
         for (int i = 0; i < arrays.length; i++) {
             if (arrays[i] != null) {
