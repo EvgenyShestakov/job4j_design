@@ -2,13 +2,15 @@ package ru.job4j.io.duplicates;
 
 import java.util.Objects;
 
-public class FileProperty {
+public class FileProperty implements Comparable<FileProperty> {
     private long size;
     private String name;
+    private String path;
 
-    public FileProperty(long size, String name) {
+    public FileProperty(long size, String name, String path) {
         this.size = size;
         this.name = name;
+        this.path = path;
     }
 
     public long getSize() {
@@ -26,6 +28,10 @@ public class FileProperty {
     public void setName(String name) {
         this.name = name;
     }
+
+    public String getPath() {
+        return path; }
+
 
     @Override
     public boolean equals(Object o) {
@@ -49,6 +55,12 @@ public class FileProperty {
         return "FileProperty{"
                 + "size=" + size
                 + ", name='" + name + '\''
+                + ", path='" + path + '\''
                 + '}';
+    }
+
+    @Override
+    public int compareTo(FileProperty o) {
+        return name.compareTo(o.name);
     }
 }
