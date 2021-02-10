@@ -5,10 +5,7 @@ import java.util.Objects;
 
 public class Dir {
     public static void main(String[] args) {
-        if (args.length == 0) {
-            throw new IllegalArgumentException("Root folder is null. Usage java -jar dir.jar ROOT_FOLDER.");
-        }
-        File file = new File(args[0]);
+        File file = new File("c:/projects");
         if (!file.exists()) {
             throw new IllegalArgumentException(String.format("Not exist %s", file.getAbsoluteFile()));
         }
@@ -17,10 +14,8 @@ public class Dir {
         }
         System.out.println(String.format("size : %s", file.getTotalSpace()));
         for (File subfile : Objects.requireNonNull(file.listFiles())) {
-            if (subfile.getName().endsWith(args[1])) {
-                System.out.println(String.format("name : %s", subfile.getName()));
-                System.out.println(String.format("size : %s", subfile.length()));
-            }
+            System.out.println(String.format("name : %s", subfile.getName()));
+            System.out.println(String.format("size : %s", subfile.length()));
         }
     }
 }
