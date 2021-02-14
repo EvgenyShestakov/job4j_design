@@ -9,20 +9,15 @@ import java.util.zip.ZipOutputStream;
 
 public class Zip {
     public void packFiles(List<Path> sources, Path target) {
-        try (ZipOutputStream zip = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(target.toString())))) {
-            sources.forEach(file -> {
-                try {
-                    zip.putNextEntry(new ZipEntry(file.toString()));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
+        try (ZipOutputStream zip = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(target.
+                toString())))) {
             for (Path source : sources) {
                 try (BufferedInputStream in = new BufferedInputStream(new FileInputStream(source.toString()))) {
+                    zip.putNextEntry(new ZipEntry(source.toString()));
                     zip.write(in.readAllBytes());
                 }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -31,12 +26,18 @@ public class Zip {
         try (ZipOutputStream zip = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(target.
                 toString())))) {
             zip.putNextEntry(new ZipEntry(source.toString()));
-            try (BufferedInputStream out = new BufferedInputStream(new FileInputStream(source.toString()))) {
-                zip.write(out.readAllBytes());
+            try (BufferedInputStream in = new BufferedInputStream(new FileInputStream(source.toString()))) {
+                zip.write(in.readAllBytes());
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static List<Path> search(Path root, String ext) throws IOException {
+        SearchFiles searcher = new SearchFiles(p -> !p.toFile().getName().endsWith(ext));
+        Files.walkFileTree(root, searcher);
+        return searcher.getPaths();
     }
 
     public static void main(String[] args) {
@@ -45,7 +46,7 @@ public class Zip {
         if (argZip.valid()) {
             List<Path> list = null;
             try {
-                list = Search.search(Paths.get(argZip.directory()), argZip.exclude());
+                list = search(Paths.get(argZip.directory()), argZip.exclude());
             } catch (IOException e) {
                 e.printStackTrace();
             }
