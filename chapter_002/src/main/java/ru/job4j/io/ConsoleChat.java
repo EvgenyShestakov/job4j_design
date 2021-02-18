@@ -2,14 +2,16 @@ package ru.job4j.io;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 public class ConsoleChat {
     private final String log;
     private final String botAnswers;
-    private final List<String> answers = new ArrayList<>();
     private static final String OUT = "закончить";
     private static final String STOP = "стоп";
     private static final String CONTINUE = "продолжить";
@@ -20,14 +22,17 @@ public class ConsoleChat {
     }
 
     public void run() {
-        try (BufferedWriter out = new BufferedWriter(new FileWriter(log, StandardCharsets.UTF_8));
-             BufferedReader user = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8))) {
+        List<String> logList = new ArrayList<>();
+        try (BufferedReader user = new BufferedReader(new InputStreamReader(System.in, StandardCharsets.UTF_8))) {
+            List<String> answers = new ArrayList<>();
+            Stream<String> lines = Files.lines(Paths.get(botAnswers));
+            lines.forEach(answers::add);
             String text = null;
             String textBot;
             boolean key = true;
             while (!Objects.equals(text, OUT)) {
                 text = user.readLine();
-                out.write("Я - " + text + System.lineSeparator());
+                logList.add("Я - " + text);
                 if (Objects.equals(text, CONTINUE)) {
                     key = true;
                     continue;
@@ -35,28 +40,26 @@ public class ConsoleChat {
                     key = false;
                 }
                 if (key) {
-                    textBot = bot();
+                    int index = (int) (Math.random() * answers.size());
+                    textBot = answers.get(index);
                     System.out.println(textBot);
-                    out.write("Бот - " + textBot + System.lineSeparator());
+                    logList.add("Бот - " + textBot);
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    private String bot() {
-        if (answers.isEmpty()) {
-            try (BufferedReader in = new BufferedReader(new FileReader(botAnswers, StandardCharsets.UTF_8))) {
-                while (in.ready()) {
-                    answers.add(in.readLine());
+        try (BufferedWriter out = new BufferedWriter(new FileWriter(log, StandardCharsets.UTF_8))) {
+            logList.forEach(s -> {
+                try {
+                    out.write(s + System.lineSeparator());
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        int index = (int) (Math.random() * answers.size());
-        return  answers.get(index);
     }
 
     public static void main(String[]args) {
