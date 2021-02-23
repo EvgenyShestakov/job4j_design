@@ -21,13 +21,18 @@ public class EchoServer {
                         str = in.readLine();
                     }
                     if (request.indexOf("Exit") != -1) {
+                        out.write("HTTP/1.1 200 OK\r\n\r\n");
+                        out.write("Bye");
+                        out.flush();
                         server.close();
                     } else if (request.indexOf("Hello") != -1) {
-                        out.write("HTTP/1.1 200 Hello\r\n");
+                        out.write("HTTP/1.1 200 OK\r\n\r\n");
+                        out.write("Hello");
                     } else if (request.indexOf("Any") != -1) {
-                        out.write("HTTP/1.1 200 What?\r\n");
+                        out.write("HTTP/1.1 200 OK\r\n\r\n");
+                        out.write("What?");
                     } else {
-                        out.write("HTTP/1.1 200 OK\r\n");
+                        out.write("HTTP/1.1 200 OK\r\n\r\n");
                     }
                     out.flush();
                 }
