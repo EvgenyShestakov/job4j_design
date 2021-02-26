@@ -1,0 +1,15 @@
+<?xml version="1.1" encoding="UTF-8" ?>
+<pc videoCard="true" frequencyCPU="5000" collector ="DNS">
+<peripherals monitor="Samsung HRG570" keyboard="Logitech MK220"
+             mouse="Logitech RX340" columns="Edifier S550"/>
+ <accessories>
+     <accessory>CPU</accessory>
+     <accessory>Motherboard</accessory>
+     <accessory>RAM memory</accessory>
+     <accessory>Video card</accessory>
+     <accessory>Hard disk</accessory>
+     <accessory>Power supply unit</accessory>
+     <accessory>PC case</accessory>
+ </accessories>
+</pc>
+
