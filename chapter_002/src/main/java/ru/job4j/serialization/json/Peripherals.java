@@ -1,10 +1,19 @@
 package ru.job4j.serialization.json;
 
+import com.sun.xml.txw2.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlAttribute;
+
+@XmlElement(value = "peripherals")
 public class Peripherals {
-    private final String monitor;
-    private final String keyboard;
-    private final String mouse;
-    private final String columns;
+    @XmlAttribute
+    private String monitor;
+    private String keyboard;
+    private String mouse;
+    private String columns;
+
+    public Peripherals() {
+
+    }
 
     public Peripherals(String monitor, String keyboard, String mouse, String columns) {
         this.monitor = monitor;

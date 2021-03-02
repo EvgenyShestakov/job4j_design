@@ -2,15 +2,28 @@ package ru.job4j.serialization.json;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.annotation.*;
+import java.io.StringWriter;
 import java.util.Arrays;
 
+@XmlRootElement(name = "pc")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class PC {
-    private final boolean videoCard;
-    private final int frequencyCPU;
-    private final String collector;
-    private final Peripherals peripherals;
-    private final String[] accessories;
+    @XmlAttribute
+    private boolean videoCard;
+    private int frequencyCPU;
+    private String collector;
+    private Peripherals peripherals;
+    @XmlElementWrapper(name = "accessories")
+    @XmlElement(name = "accessory")
+    private String[] accessories;
+
+    public PC() {
+
+    }
 
     public PC(boolean videoCard, int frequencyCPU, String collector, Peripherals peripherals, String[] accessories) {
         this.videoCard = videoCard;
@@ -31,16 +44,28 @@ public class PC {
                 + '}';
     }
 
-    public static void main(String[] args) {
-        final PC pc = new PC(true, 5000, "DNS",
+    public static void main(String[] args) throws JAXBException {
+        PC pc = new PC(true, 5000, "DNS",
                 new Peripherals("Samsung HRG570", "Logitech MK220",
                         "Logitech RX340", "Edifier S550"),
                 new String[]{"CPU", "Motherboard", "RAM memory", "Video card",
                         "Hard disk", "Power supply unit", "PC case"});
-        final Gson gson = new GsonBuilder().create();
+        Gson gson = new GsonBuilder().create();
         String pcJson = gson.toJson(pc);
         System.out.println(pcJson);
-        final PC pcMod = gson.fromJson(pcJson, PC.class);
+        PC pcMod = gson.fromJson(pcJson, PC.class);
         System.out.println(pcMod);
+        JAXBContext context = JAXBContext.newInstance(PC.class);
+        Marshaller marshaller = context.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+
+        try (StringWriter writer = new StringWriter()) {
+            marshaller.marshal(pc, writer);
+            String result = writer.getBuffer().toString();
+            System.out.println(result);
+        } catch (Exception e) {
+
+        }
     }
 }
+
