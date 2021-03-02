@@ -2,6 +2,8 @@ package ru.job4j.serialization.json;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.json.JSONObject;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -44,6 +46,26 @@ public class PC {
                 + '}';
     }
 
+    public boolean isVideoCard() {
+        return videoCard;
+    }
+
+    public int getFrequencyCPU() {
+        return frequencyCPU;
+    }
+
+    public String getCollector() {
+        return collector;
+    }
+
+    public Peripherals getPeripherals() {
+        return peripherals;
+    }
+
+    public String[] getAccessories() {
+        return accessories;
+    }
+
     public static void main(String[] args) throws JAXBException {
         PC pc = new PC(true, 5000, "DNS",
                 new Peripherals("Samsung HRG570", "Logitech MK220",
@@ -58,7 +80,6 @@ public class PC {
         JAXBContext context = JAXBContext.newInstance(PC.class);
         Marshaller marshaller = context.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-
         try (StringWriter writer = new StringWriter()) {
             marshaller.marshal(pc, writer);
             String result = writer.getBuffer().toString();
@@ -66,6 +87,20 @@ public class PC {
         } catch (Exception e) {
 
         }
+        JSONObject jsonPeripherals = new JSONObject("{\"peripherals\":"
+                + "{\"monitor\":\"Samsung HRG570\",\"keyboard\":\"Logitech MK220\","
+                + "\"mouse\":\"Logitech RX340\",\"columns\":\"Edifier S550\"}}");
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("videoCard", pc.isVideoCard());
+        jsonObject.put("frequencyCPU", pc.getFrequencyCPU());
+        jsonObject.put("collector", pc.getCollector());
+        jsonObject.put("peripherals", pc.getPeripherals());
+        jsonObject.put("accessories", pc.getAccessories());
+        System.out.println(jsonPeripherals.toString());
+        System.out.println(jsonObject.toString());
+        System.out.println(new JSONObject(pc).toString());
+
+
     }
 }
 
