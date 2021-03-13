@@ -5,11 +5,11 @@ import java.util.Map;
 
 public class Args {
     private final String[] args;
-    private  Map<String, String> pair = new HashMap<>();
-    private SearchFiles searcher;
+    private final Map<String, String> pair = new HashMap<>();
 
     public Args(String[] args) {
-        this.args = args; }
+        this.args = args;
+    }
 
     public boolean valid() {
         boolean flag = true;
@@ -45,31 +45,10 @@ public class Args {
                 }
             }
         }
-        if (flag) {
-            String name = pair.get("-n");
-            switch (pair.get("-t")) {
-                case ("name") :
-                    searcher = new SearchFiles(p -> p.getFileName().toString().equals(name));
-                    break;
-                case ("mask") :
-                    searcher = new SearchFiles(p -> p.getFileName().toString().endsWith(name.substring(1)));
-                    break;
-                case ("regex") :
-                    searcher = new SearchFiles(p -> p.getFileName().toString().matches(name));
-                    break;
-                default :
-                    System.out.println("The search type is set incorrectly");
-                    flag = false;
-            }
-        }
         return flag;
     }
 
     public Map<String, String> getPair() {
         return pair;
-    }
-
-    public SearchFiles getSearcher() {
-        return searcher;
     }
 }
