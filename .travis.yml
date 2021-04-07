@@ -21,3 +21,12 @@ notifications:
     env:
       global:
         - CODECOV_TOKEN="21aced86-ee60-4acc-8631-aefa76feaee8"
+
+
+# Start PostgreSQL
+services:
+  - postgresql
+
+# Create a database
+before_script:
+  - psql -c 'create database travis_ci_test;' -U postgres
