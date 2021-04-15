@@ -10,27 +10,12 @@ import java.util.List;
 import java.util.Properties;
 
 public class ImportDB {
-    private Properties cfg = new Properties();
+    private Properties cfg;
     private String dump;
-    private Connection connection;
 
-    public ImportDB(String dump) {
+    public ImportDB(Properties cfg, String dump) {
+        this.cfg = cfg;
         this.dump = dump;
-        initConnection();
-    }
-
-    private void initConnection() {
-        ClassLoader loader = ImportDB.class.getClassLoader();
-        try (InputStream io = loader.getResourceAsStream("app.properties")) {
-            cfg.load(io);
-            Class.forName(cfg.getProperty("jdbc.driver"));
-            String url = cfg.getProperty("jdbc.url");
-            String login = cfg.getProperty("jdbc.username");
-            String password = cfg.getProperty("jdbc.password");
-            connection =  DriverManager.getConnection(url, login, password);
-        } catch (IOException | ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-        }
     }
 
     public List<User> load() throws IOException {
@@ -44,13 +29,24 @@ public class ImportDB {
         return users;
     }
 
-    public void save(List<User> users) throws ClassNotFoundException, SQLException {
-        for (User user : users) {
-            try (PreparedStatement ps = connection.
-                    prepareStatement("insert into users(name, email) values (?, ?)")) {
-                ps.setString(1, user.name);
-                ps.setString(2, user.email);
-                ps.execute();
+    public void save(List<User> users) throws ClassNotFoundException, SQLException, IOException {
+        ClassLoader loader =  ImportDB.class.getClassLoader();
+        try (InputStream io = loader.getResourceAsStream("app.properties")) {
+            cfg.load(io);
+            Class.forName(cfg.getProperty("jdbc.driver"));
+            try (Connection cnt = DriverManager.getConnection(
+                    cfg.getProperty("jdbc.url"),
+                    cfg.getProperty("jdbc.username"),
+                    cfg.getProperty("jdbc.password")
+            )) {
+                for (User user : users) {
+                    try (PreparedStatement ps = cnt.
+                            prepareStatement("insert into users(name, email) values (?, ?)")) {
+                        ps.setString(1, user.name);
+                        ps.setString(2, user.email);
+                        ps.execute();
+                    }
+                }
             }
         }
     }
@@ -66,7 +62,12 @@ public class ImportDB {
     }
 
     public static void main(String[] args) throws Exception {
-        ImportDB db = new ImportDB("./dump.txt");
+        ImportDB db = new ImportDB(new Properties(), "./dump.txt");
         db.save(db.load());
     }
 }
+
+
+
+
+
