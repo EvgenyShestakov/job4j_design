@@ -3,32 +3,28 @@ package ru.job4j.kiss;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class MaxMin {
     public <T> T max(List<T> value, Comparator<T> comparator) {
-        T max = null;
-        if (!value.isEmpty()) {
-            max = value.get(0);
-            for (T elem: value) {
-                if (comparator.compare(max, elem) < 0) {
-                    max = elem;
-                }
-            }
-        }
-        return max;
+        return find(value, comparator, integer -> integer < 0);
     }
 
     public <T> T min(List<T> value, Comparator<T> comparator) {
-        T min = null;
-        if (!value.isEmpty()) {
-            min = value.get(0);
+        return find(value, comparator, integer ->  integer > 0);
+    }
+
+    private <T> T find(List<T> value, Comparator<T> comparator, Predicate<Integer> predicate) {
+        T result = null;
+        if (value != null && !value.isEmpty()) {
+            result = value.get(0);
             for (T elem : value) {
-                if (comparator.compare(min, elem) > 0) {
-                    min = elem;
+                if (predicate.test(comparator.compare(result, elem))) {
+                    result = elem;
                 }
             }
         }
-        return min;
+        return result;
     }
 
     public static void main(String[] args) {
