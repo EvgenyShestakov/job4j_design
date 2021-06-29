@@ -11,7 +11,7 @@ public class MaxMin {
     }
 
     public <T> T min(List<T> value, Comparator<T> comparator) {
-        return find(value, comparator, integer ->  integer > 0);
+        return find(value, comparator, integer -> integer > 0);
     }
 
     private <T> T find(List<T> value, Comparator<T> comparator, Predicate<Integer> predicate) {
