@@ -3,11 +3,14 @@ package ru.job4j.design.srp;
 import static org.junit.Assert.assertThat;
 import static org.hamcrest.Matchers.is;
 import org.junit.Test;
+
+import javax.xml.bind.JAXBException;
+import java.io.IOException;
 import java.util.*;
 
 public class ReportEngineTest {
     @Test
-    public void whenOldGenerated() {
+    public void whenOldGenerated() throws JAXBException, IOException {
         MemStore store = new MemStore();
         Calendar now = Calendar.getInstance();
         Employee worker = new Employee("Ivan", now, now, 100);
@@ -24,7 +27,7 @@ public class ReportEngineTest {
         assertThat(engine.generate(em -> true), is(expect.toString()));
     }
     @Test
-    public void whenRequiredByTheProgrammerDepartment() {
+    public void whenRequiredByTheProgrammerDepartment() throws JAXBException, IOException {
         MemStore store = new MemStore();
         Calendar now = Calendar.getInstance();
         Employee worker = new Employee("Ivan", now, now, 100);
@@ -43,7 +46,7 @@ public class ReportEngineTest {
     }
 
     @Test
-    public void whenRequiredByTheAccountingDepartment() {
+    public void whenRequiredByTheAccountingDepartment() throws JAXBException, IOException {
         MemStore store = new MemStore();
         Calendar now = Calendar.getInstance();
         Employee worker = new Employee("Ivan", now, now, 100);
@@ -61,7 +64,7 @@ public class ReportEngineTest {
     }
 
     @Test
-    public  void whenRequiredByHumanResource() {
+    public  void whenRequiredByHumanResource() throws JAXBException, IOException {
         MemStore store = new MemStore();
         Calendar now = Calendar.getInstance();
         Employee worker1 = new Employee("Ivan", now, now, 100);
