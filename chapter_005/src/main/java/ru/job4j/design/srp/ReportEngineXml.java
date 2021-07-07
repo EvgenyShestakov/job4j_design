@@ -18,14 +18,13 @@ public class ReportEngineXml implements Report {
     @Override
     public String generate(Predicate<Employee> filter) throws JAXBException, IOException {
         List<Employee> list = store.findBy(filter);
-        JAXBContext context = JAXBContext.newInstance(Employee.class);
+        Employees employees = new Employees(list);
+        JAXBContext context = JAXBContext.newInstance(Employees.class);
         Marshaller marshaller = context.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
         String xml;
         try (StringWriter writer = new StringWriter()) {
-            for (Employee employee : list) {
-                marshaller.marshal(employee, writer);
-            }
+            marshaller.marshal(employees, writer);
             xml = writer.getBuffer().toString();
         }
         return xml;
