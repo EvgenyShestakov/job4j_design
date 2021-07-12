@@ -1,6 +1,7 @@
 package ru.job4j.ood.lsp.storage;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 public class Food {
     private String name;
@@ -16,16 +17,14 @@ public class Food {
         this.price = price;
     }
 
+    public double expirationPercentage() {
+        long lifeTime = ChronoUnit.DAYS.between(createDate, expiryDate);
+        long remain = ChronoUnit.DAYS.between(LocalDate.now(), expiryDate);
+        return (double) remain / lifeTime * 100;
+    }
+
     public void setDiscount(int discount) {
         this.discount = discount;
-    }
-
-    public LocalDate getExpiryDate() {
-        return expiryDate;
-    }
-
-    public LocalDate getCreateDate() {
-        return createDate;
     }
 
     @Override

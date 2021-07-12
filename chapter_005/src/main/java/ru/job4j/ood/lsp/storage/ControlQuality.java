@@ -1,49 +1,21 @@
 package ru.job4j.ood.lsp.storage;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 public class ControlQuality {
-    private final Storage shop = new Shop();
-    private final Storage warehouse = new Warehouse();
-    private final Storage trash = new Trash();
+    private final List<Storage> storages;
+
+    public ControlQuality(List<Storage> storages) {
+        this.storages = storages;
+    }
 
     public void distribution(Food food) {
-        Storage storage = check(food);
-        storage.add(food);
-    }
-
-    private Storage check(Food food) {
-        Storage storage = null;
-        LocalDate expiryDate = food.getExpiryDate();
-        LocalDate createDate = food.getCreateDate();
-        LocalDate now = LocalDate.now();
-        long lifeTime = ChronoUnit.DAYS.between(createDate, expiryDate);
-        long remain = ChronoUnit.DAYS.between(now, expiryDate);
-        double percent = (double) remain / lifeTime * 100;
-        if (percent <= 0) {
-            storage = trash;
-        } else if (percent > 75) {
-            storage = warehouse;
-        } else if (percent >= 25) {
-            storage = shop;
-        } else if (percent < 25) {
-            food.setDiscount(20);
-            storage = shop;
+        for (Storage storage : storages) {
+            if (storage.accept(food)) {
+                storage.add(food);
+            }
         }
-        return storage;
-    }
-
-    public Storage getShop() {
-        return shop;
-    }
-
-    public Storage getWarehouse() {
-        return warehouse;
-    }
-
-    public Storage getTrash() {
-        return trash;
     }
 
     public static void main(String[] args) {
@@ -55,14 +27,12 @@ public class ControlQuality {
                 LocalDate.of(2017, 3, 17), 70);
         Bread bread = new Bread("Borodinsky",  LocalDate.of(2021, 7, 25),
                 LocalDate.of(2021, 7, 10), 50);
-        ControlQuality control = new ControlQuality();
+        ControlQuality control = new ControlQuality(List.of(new Warehouse(), new Shop(), new Trash()));
         control.distribution(fish);
         control.distribution(milk);
         control.distribution(bread);
         control.distribution(fruit);
-        System.out.println("Мусор " + control.getTrash().get());
-        System.out.println("Склад " + control.getWarehouse().get());
-        System.out.println("Магазин " + control.getShop().get());
+        control.storages.forEach(storage -> System.out.println(storage.get()));
     }
 }
 

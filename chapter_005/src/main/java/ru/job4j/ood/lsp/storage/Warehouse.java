@@ -12,6 +12,16 @@ public class Warehouse implements Storage {
     }
 
     @Override
+    public boolean accept(Food food) {
+        boolean flag = false;
+        double percent = food.expirationPercentage();
+        if (percent > 75) {
+            flag = true;
+        }
+        return flag;
+    }
+
+    @Override
     public List<Food> get() {
         return list;
     }
