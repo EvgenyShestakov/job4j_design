@@ -14,6 +14,7 @@ public class ControlQuality {
         for (Storage storage : storages) {
             if (storage.accept(food)) {
                 storage.add(food);
+                break;
             }
         }
     }
