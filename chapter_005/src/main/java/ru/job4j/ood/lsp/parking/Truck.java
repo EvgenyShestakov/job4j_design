@@ -7,4 +7,6 @@ public class Truck extends Car {
             throw new IllegalArgumentException("Размер грузовой машины не может быть меньше 2");
         }
     }
+
+
 }
