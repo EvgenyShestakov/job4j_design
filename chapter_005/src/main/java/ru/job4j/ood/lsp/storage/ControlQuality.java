@@ -1,6 +1,7 @@
 package ru.job4j.ood.lsp.storage;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ControlQuality {
@@ -16,6 +17,19 @@ public class ControlQuality {
                 storage.add(food);
                 break;
             }
+        }
+    }
+
+    public void resort() {
+        List<Food> redistribution = new ArrayList<>();
+        for (Storage storage : storages) {
+            List<Food> foods = storage.get();
+            for (int i = 0; i < foods.size(); i++) {
+                redistribution.add(foods.remove(i));
+            }
+        }
+        for (Food food : redistribution) {
+            distribution(food);
         }
     }
 
