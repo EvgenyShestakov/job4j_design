@@ -9,7 +9,7 @@ import java.util.List;
 public class Search {
     public static void main(String[] args) throws IOException {
         if (args.length < 2) {
-            throw new IllegalArgumentException("Root folder or file extension is null. "
+            throw new IllegalArgumentException("Root folder or file extension is null."
                     + "Usage java -jar dir.jar ROOT_FOLDER.");
         }
         Path start = Paths.get(args[0]);
