@@ -1,15 +1,66 @@
 package ru.job4j.io;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 
 public class CSVReader {
+    public void read(Path path, String output, String delimiter, String filter) throws IOException {
+        List<List<String>> lists = new ArrayList<>();
+        List<Integer> indices = new ArrayList<>();
+        String[] filt = filter.split(",");
+        try (Scanner scanner1 = new Scanner((path))) {
+            if (scanner1.hasNext()) {
+                String[] heading = scanner1.nextLine().split(delimiter);
+                for (int i = 0; i < heading.length; i++) {
+                    for (String f : filt) {
+                        if (heading[i].equals(f)) {
+                            indices.add(i);
+                        }
+                    }
+                }
+            }
+            while (scanner1.hasNext()) {
+                String line = scanner1.nextLine();
+                try (Scanner scanner2 = new Scanner(line).useDelimiter(delimiter)) {
+                    List<String> list = new ArrayList<>();
+                    while (scanner2.hasNext()) {
+                        list.add(scanner2.next());
+                    }
+                    lists.add(list);
+                }
+            }
+        }
+        if (output.equals("stdout")) {
+            outConsole(lists, indices);
+        } else {
+            outFile(output, lists, indices);
+        }
+    }
+
+    private void outFile(String output, List<List<String>> lists, List<Integer> indices) throws IOException {
+        try (BufferedWriter out = new BufferedWriter(new FileWriter(output))) {
+            for (List<String> list : lists) {
+                for (Integer integer : indices) {
+                    out.write(list.get(integer) + System.lineSeparator());
+                }
+                out.write(System.lineSeparator());
+            }
+        }
+    }
+
+    private void outConsole(List<List<String>> lists, List<Integer> indices) {
+        for (List<String> list : lists) {
+            for (Integer integer : indices) {
+                System.out.println(list.get(integer));
+            }
+            System.out.println();
+        }
+    }
+
     public static void main(String[] args) throws IOException {
         if (args.length != 4) {
             throw new IllegalArgumentException("Arguments set incorrectly");
@@ -17,35 +68,9 @@ public class CSVReader {
         ArgsName argsName = ArgsName.of(args);
         Path path = Paths.get(argsName.get("path"));
         String out = argsName.get("out");
-        PrintStream printStream;
-        if (out.equals("stdout")) {
-            printStream = System.out;
-        } else {
-            printStream = new PrintStream(out);
-        }
-        Set<String> filter = new HashSet<>(Arrays.asList(argsName.get("filter").split(",")));
-        String[] columns = null;
-        String line;
-        int index = 0;
-        try (Scanner scanner1 = new Scanner(path)) {
-            if (scanner1.hasNext()) {
-                columns = scanner1.next().split(",");
-            }
-            while (scanner1.hasNext()) {
-                line = scanner1.next();
-                try (Scanner scanner2 = new Scanner(line).useDelimiter(argsName.get("delimiter"))) {
-                    while (scanner2.hasNext()) {
-                        String step = scanner2.next();
-                        if (filter.contains(columns[index])) {
-                            System.out.println(step);
-                        }
-                        index++;
-                    }
-                    index = 0;
-                }
-                printStream.println();
-            }
-        }
-        printStream.close();
+        String delimiter = argsName.get("delimiter");
+        String filter = argsName.get("filter");
+        CSVReader csvReader = new CSVReader();
+        csvReader.read(path, out, delimiter, filter);
     }
 }
