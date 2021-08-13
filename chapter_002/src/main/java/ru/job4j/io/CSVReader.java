@@ -10,19 +10,9 @@ import java.util.*;
 public class CSVReader {
     public void read(Path path, String output, String delimiter, String filter) throws IOException {
         List<List<String>> lists = new ArrayList<>();
-        List<Integer> indices = new ArrayList<>();
-        String[] filt = filter.split(",");
+        List<Integer> indices;
         try (Scanner scanner1 = new Scanner((path))) {
-            if (scanner1.hasNext()) {
-                String[] heading = scanner1.nextLine().split(delimiter);
-                for (int i = 0; i < heading.length; i++) {
-                    for (String f : filt) {
-                        if (heading[i].equals(f)) {
-                            indices.add(i);
-                        }
-                    }
-                }
-            }
+            indices = parsingIndexes(scanner1.nextLine(), delimiter, filter);
             while (scanner1.hasNext()) {
                 String line = scanner1.nextLine();
                 try (Scanner scanner2 = new Scanner(line).useDelimiter(delimiter)) {
@@ -41,13 +31,29 @@ public class CSVReader {
         }
     }
 
+    private List<Integer> parsingIndexes(String heading, String delimiter, String filter) {
+        List<Integer> indices = new ArrayList<>();
+        String[] filt = filter.split(",");
+        String[] headings = heading.split(delimiter);
+        for (int i = 0; i < headings.length; i++) {
+            for (String f : filt) {
+                if (headings[i].equals(f)) {
+                    indices.add(i);
+                    break;
+                }
+            }
+        }
+        return indices;
+    }
+
     private void outFile(String output, List<List<String>> lists, List<Integer> indices) throws IOException {
         try (BufferedWriter out = new BufferedWriter(new FileWriter(output))) {
             for (List<String> list : lists) {
                 for (Integer integer : indices) {
-                    out.write(list.get(integer) + System.lineSeparator());
+                    out.write(list.get(integer));
+                    out.newLine();
                 }
-                out.write(System.lineSeparator());
+                out.newLine();
             }
         }
     }
